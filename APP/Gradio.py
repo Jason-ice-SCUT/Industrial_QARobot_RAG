@@ -6,44 +6,8 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-# 在导入任何 huggingface 相关模块之前，强制设置镜像配置
-# 使用国内镜像 hf-mirror.com
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
-os.environ['HUGGINGFACE_HUB_ENDPOINT'] = 'https://hf-mirror.com'
-
-# 导入镜像配置模块（确保缓存目录等设置生效）
-import os_mirror.os_mirror
-
-# 在线模式：明确设置允许网络访问
-os.environ['TRANSFORMERS_OFFLINE'] = '0'
-os.environ['HF_DATASETS_OFFLINE'] = '0'
-os.environ['HF_HUB_OFFLINE'] = '0'
-
-# 强制配置 huggingface_hub 使用镜像（如果已安装）
-try:
-    import huggingface_hub
-    # 直接设置端点常量
-    huggingface_hub.constants.ENDPOINT = 'https://hf-mirror.com'
-    # 设置文件下载端点
-    if hasattr(huggingface_hub.constants, 'HF_HUB_ENDPOINT'):
-        huggingface_hub.constants.HF_HUB_ENDPOINT = 'https://hf-mirror.com'
-    
-    # Monkey patch: 替换 URL 中的 huggingface.co 为 hf-mirror.com
-    original_hf_hub_url = huggingface_hub.file_download.hf_hub_url
-    def patched_hf_hub_url(*args, **kwargs):
-        url = original_hf_hub_url(*args, **kwargs)
-        if url and 'huggingface.co' in url:
-            url = url.replace('huggingface.co', 'hf-mirror.com')
-        return url
-    huggingface_hub.file_download.hf_hub_url = patched_hf_hub_url
-    
-    print(f"已配置 huggingface_hub 使用镜像: {huggingface_hub.constants.ENDPOINT}")
-except (ImportError, AttributeError) as e:
-    print(f"配置 huggingface_hub 镜像时出错: {e}")
-    pass
-
-# 打印镜像配置信息（用于调试）
-print(f"使用镜像站点: {os.environ.get('HUGGINGFACE_HUB_ENDPOINT', '未设置')}")
+# 导入hf镜像环境配置
+import Gradio_env 
 
 try:
     from RAG import query
