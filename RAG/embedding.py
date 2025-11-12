@@ -1,13 +1,13 @@
-import os_mirror.os_mirror # 个人构建的hf镜像环境
 from . import chunk_traditional as chunk_t
 import chromadb
 import os
 from FlagEmbedding import FlagAutoModel
-from transformers import AutoTokenizer, AutoModelForCausalLM
+#from FlagEmbedding.inference.embedder.encoder_only import BGEEncoder
 
-EMBEDDING_MODEL = FlagAutoModel.from_finetuned('BAAI/bge-base-en-v1.5',
-                                      query_instruction_for_retrieval="Represent this sentence for searching relevant passages:",
-                                      use_fp16=True)
+#local_model_path = ".cache/hub/models--BAAI--bge-base-en-v1.5/snapshots/1.0"  # 本地模型路径
+EMBEDDING_MODEL = FlagAutoModel("BAAI/bge-base-en-v1.5",
+                            query_instruction_for_retrieval="Represent this sentence for searching relevant passages:",
+                            use_fp16=True)
 
 # 获取项目根目录（RAG 目录的上一级）
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,7 +18,7 @@ chromadb_collection = chromadb_client.get_or_create_collection("IndustrialQA_DB"
 
 def create_db() ->None:
     for idx, c in enumerate(chunk_t.chunk_text()):
-        print(f"Process: {c}")
+        #print(f"Process: {c}")
         embedding: list[float] = embed_text(c, for_query=True)
         chromadb_collection.upsert(
             ids=str(idx),
@@ -56,5 +56,5 @@ def query_db(query: str) -> list[str]:
     assert results['documents'][0]  # 确保有结果
     return results['documents'][0]  # 返回第一个查询的结果列表
 
-#if __name__ == "__main__":
-    #create_db()
+if __name__ == "__main__":
+    create_db()

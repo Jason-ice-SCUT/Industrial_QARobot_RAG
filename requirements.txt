@@ -1,0 +1,36 @@
+# ========== 镜像配置（国内加速） ==========
+--index-url https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/win-64/
+--extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
+--trusted-host mirrors.tuna.tsinghua.edu.cn
+--trusted-host pypi.tuna.tsinghua.edu.cn
+
+# ========== PyTorch 2.1.2 + CUDA 11.8（锁定版本） ==========
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
+torchaudio==2.1.2+cu118
+
+# ========== 开发版 Transformers（支持 gemma3_text） ==========
+git+https://github.com/huggingface/transformers.git@main
+
+# ========== 其余依赖保持原版本，避免 ABI 冲突 ==========
+tokenizers==0.21.1
+accelerate==0.32.0
+safetensors==0.4.3
+chromadb==0.4.18
+FlagEmbedding==1.3.5
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.13.0
+scikit-learn==1.4.2
+tqdm==4.66.4
+requests==2.31.0
+urllib3==2.0.7
+pillow==10.3.0
+gradio==4.44.1
+filelock==3.14.0
+huggingface-hub==0.24.0
+aiohttp==3.9.5
+httpx==0.27.0
+typing-extensions==4.11.0
+packaging==24.0
+psutil==5.9.8

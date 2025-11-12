@@ -1,13 +1,33 @@
+import Gradio_env
 import gradio as gr
 import os
 import sys
+import shutil
+
+
 
 # 添加项目路径
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
-# 导入hf镜像环境配置
-import Gradio_env 
+
+# 重置数据库
+def reset_database():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    chroma_db_path = os.path.join(project_root, "chroma.db")
+    
+    if os.path.exists(chroma_db_path):
+        shutil.rmtree(chroma_db_path)
+        print("已重置数据库")
+    
+    # 重新导入 embedding 模块以创建新数据库
+    from RAG import embedding
+    embedding.create_db()
+    print("数据库重建完成")
+
+# 在应用启动前重置数据库
+reset_database()
+
 
 try:
     from RAG import query
@@ -38,8 +58,8 @@ QA_ROBOT = gr.Interface(
     description = description,
     examples = [
         ["电动平衡车的安全要求是什么？"],
-        ["工业机器人在制造业中的应用有哪些？"],
-        ["如何提高生产线的自动化水平？"]]
+        ["电动平衡车的机械安全有哪些？"],
+        ["什么是翘板功能？"]]
 )
 
 # Launch the interface
@@ -48,5 +68,7 @@ if __name__ == "__main__":
     print("启动 Industrial Q&A Robot - 在线版本")
     print("=" * 50)
     
-    QA_ROBOT.launch()
+    QA_ROBOT.launch(
+        share=True
+    )
 
