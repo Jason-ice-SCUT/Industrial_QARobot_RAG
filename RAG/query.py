@@ -1,5 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from . import embedding 
+from . import embedding as embedding 
 import torch
 
 

@@ -1,36 +1,42 @@
-# ========== 镜像配置（国内加速） ==========
---index-url https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/win-64/
---extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# ========== 镜像配置（全国内源，避免超时） ==========
+--index-url https://pypi.tuna.tsinghua.edu.cn/simple
+--extra-index-url https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/win-64/
 --trusted-host mirrors.tuna.tsinghua.edu.cn
 --trusted-host pypi.tuna.tsinghua.edu.cn
 
-# ========== PyTorch 2.1.2 + CUDA 11.8（锁定版本） ==========
-torch==2.1.2+cu118
-torchvision==0.16.2+cu118
-torchaudio==2.1.2+cu118
+# ========== PyTorch 2.1.2 + CUDA 11.8（修复cudnn版本） ==========
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+nvidia-cublas-cu11==11.11.3.6
+nvidia-cudnn-cu11==8.9.5.29  # 源中存在的兼容版本
 
-# ========== 开发版 Transformers（支持 gemma3_text） ==========
-git+https://github.com/huggingface/transformers.git@main
-
-# ========== 其余依赖保持原版本，避免 ABI 冲突 ==========
+# ========== 其余依赖（保持不变） ==========
+httpcore==1.0.6        
+chroma-hnswlib==0.7.3  
+psutil==5.9.8          
+aiofiles
+fastapi
+uvicorn==0.24.0
+pydantic
+gradio==5.30.0 
 tokenizers==0.21.1
 accelerate==0.32.0
 safetensors==0.4.3
 chromadb==0.4.18
 FlagEmbedding==1.3.5
 numpy==1.26.4
-pandas==2.2.2
+pandas==2.2.3
 scipy==1.13.0
-scikit-learn==1.4.2
-tqdm==4.66.4
+scikit-learn==1.6.0    
+tqdm==4.67.1
 requests==2.31.0
 urllib3==2.0.7
 pillow==10.3.0
-gradio==4.44.1
 filelock==3.14.0
-huggingface-hub==0.24.0
-aiohttp==3.9.5
+huggingface-hub==0.28.1
+aiohttp==3.10.0        
 httpx==0.27.0
-typing-extensions==4.11.0
+typing-extensions==4.13.2  
 packaging==24.0
-psutil==5.9.8
+spacy
