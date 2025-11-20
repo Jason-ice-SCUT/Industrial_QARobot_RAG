@@ -1,13 +1,11 @@
 from . import chunk_traditional as chunk_t
 import chromadb
 import os
-from FlagEmbedding import FlagAutoModel
-#from FlagEmbedding.inference.embedder.encoder_only import BGEEncoder
+from FlagEmbedding import FlagModel
 
-#local_model_path = ".cache/hub/models--BAAI--bge-base-en-v1.5/snapshots/1.0"  # 本地模型路径
-EMBEDDING_MODEL = FlagAutoModel("BAAI/bge-base-en-v1.5",
-                            query_instruction_for_retrieval="Represent this sentence for searching relevant passages:",
-                            use_fp16=True)
+EMBEDDING_MODEL = FlagModel("BAAI/bge-base-en-v1.5",
+                            query_instruction_for_retrieval="Represent this sentence for searching relevant passages:")
+                            #use_fp16=True)
 
 # 获取项目根目录（RAG 目录的上一级）
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,7 +48,7 @@ def query_db(query: str) -> list[str]:
     embedding = embed_text(query, for_query=True)
     results = chromadb_collection.query(
         query_embeddings=[embedding],  # ChromaDB 需要列表格式
-        n_results=5
+        n_results=3
     )
     assert results['documents']
     assert results['documents'][0]  # 确保有结果

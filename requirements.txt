@@ -1,42 +1,37 @@
-# ========== 镜像配置（全国内源，避免超时） ==========
---index-url https://pypi.tuna.tsinghua.edu.cn/simple
---extra-index-url https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/win-64/
---trusted-host mirrors.tuna.tsinghua.edu.cn
---trusted-host pypi.tuna.tsinghua.edu.cn
+# ========== 镜像源配置（关键调整：PyTorch 源优先） ==========
+# 优先从 PyTorch 官方 CUDA 11.8 源下载（解决 +cu118 版本超时）
+--index-url https://download.pytorch.org/whl/cu118
+# 其他基础库从清华源兜底（加速非 PyTorch 依赖）
+--extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # ========== PyTorch 2.1.2 + CUDA 11.8（修复cudnn版本） ==========
-torch==2.1.2
-torchvision==0.16.2
-torchaudio==2.1.2
-nvidia-cublas-cu11==11.11.3.6
-nvidia-cudnn-cu11==8.9.5.29  # 源中存在的兼容版本
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
+torchaudio==2.1.2+cu118
 
-# ========== 其余依赖（保持不变） ==========
-httpcore==1.0.6        
-chroma-hnswlib==0.7.3  
-psutil==5.9.8          
-aiofiles
-fastapi
-uvicorn==0.24.0
-pydantic
-gradio==5.30.0 
-tokenizers==0.21.1
-accelerate==0.32.0
-safetensors==0.4.3
-chromadb==0.4.18
-FlagEmbedding==1.3.5
+# 核心依赖（模型加载与微调）
+transformers==4.38.2
+peft==0.10.0
+torch==2.1.2
+accelerate==0.27.2
+tokenizers==0.15.2
+safetensors==0.4.2
+
+# 数据集处理
+datasets==2.18.0
+pyarrow==15.0.0
+pandas==2.2.2
 numpy==1.26.4
-pandas==2.2.3
-scipy==1.13.0
-scikit-learn==1.6.0    
-tqdm==4.67.1
-requests==2.31.0
-urllib3==2.0.7
-pillow==10.3.0
-filelock==3.14.0
-huggingface-hub==0.28.1
-aiohttp==3.10.0        
-httpx==0.27.0
-typing-extensions==4.13.2  
-packaging==24.0
-spacy
+
+# 工具依赖（日志、进度条等）
+tqdm==4.66.2
+colorama==0.4.6
+filelock==3.13.1
+
+
+# Hugging Face 镜像支持
+huggingface-hub==0.23.0
+
+# 可选依赖（如需推理时使用）
+sentencepiece==0.2.0
+protobuf==3.20.3

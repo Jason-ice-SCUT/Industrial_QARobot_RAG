@@ -1,10 +1,12 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from . import embedding as embedding 
 import torch
+from peft import PeftModel
 
 
 #=======================加载模型并打印日志=============================
 #local_model_path = ".cache/hub/models--Qwen/Qwen2-0.5B/snapshots/1.0"  # 本地模型路径
+print("加载基础模型...")
 print("开始加载 Qwen/Qwen2-0.5B 分词器...")  # 新增日志
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2-0.5B",
                                           trust_remote_code=True)                              
@@ -15,10 +17,18 @@ print("开始加载 Qwen/Qwen2-0.5B 模型...")  # 新增日志
 LLM_MODEL = AutoModelForCausalLM.from_pretrained(
     "Qwen/Qwen2-0.5B",
     trust_remote_code=True,
-    torch_dtype=torch.float16, # 使用半精度浮点数以节省显存
-    device_map="cuda:0", # 强制使用第一块GPU
-
+    torch_dtype=torch.float32, 
+    device_map="cpu", #CPU OR GPU
+    low_cpu_mem_usage=True,  # 启用低 CPU 内存模式
+    load_in_8bit=False,  # 禁用 8bit 量化（CPU 不支持）
+    load_in_4bit=False   # 禁用 4bit 量化（CPU 不支持）
 )
+print("加载LoRA适配器...")
+model = PeftModel.from_pretrained(LLM_MODEL,
+                                   "Finetune_datasets/lora_qwen_industrial_safety/final_lora_adapter",
+                                   device_map="cpu" #CPU OR GPU
+                                   )
+
 print("模型加载完成！")  # 新增日志
 
 #=======================定义QA生成函数=============================
@@ -46,10 +56,10 @@ def QA_Generate(query: str) ->str:
         add_generation_prompt=True,
         return_dict=True,
         return_tensors="pt"
-    ).to(LLM_MODEL.device)
+    ).to(model.device)
 
     # Generate the output
-    outputs = LLM_MODEL.generate(
+    outputs = model.generate(
         **model_inputs,
         max_new_tokens=1024,
         temperature=0.7,     # 适当增加随机性（0-1，越高越灵活）
