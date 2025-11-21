@@ -12,6 +12,18 @@ A Retrieval-Augmented Generation (RAG) based question-answering system designed 
 - **User-Friendly Interface**: Provides a Gradio web interface for intuitive question input and answer display
 - **End-to-End Workflow**: From document processing and database initialization to model fine-tuning and interactive querying
 
+## User Interface
+
+The system features a simple and intuitive Gradio web interface for interaction:
+
+- **Title & Description**: Clearly labeled "Industrial Q&A Robot (Online Version)" with a brief explanation of its purpose (answers questions based on specific industrial context, supports downloading models from Hugging Face if needed)
+- **Input Area**: A text box labeled "输入问题" (Enter Question) for users to type their industrial safety-related queries
+- **Output Area**: A text box labeled "回答" (Answer) where the generated responses are displayed
+- **Action Buttons**: 
+  - "Clear": Resets the input and output fields
+  - "Submit": Triggers the question processing and answer generation
+  - "Flag": Allows users to flag inappropriate or incorrect responses
+- **Example Queries**: Pre-listed sample questions (e.g., "电动平衡车的安全要求是什么？", "电动平衡车的机械安全有哪些？") to guide users on usage
 
 ## Project Structure
 
